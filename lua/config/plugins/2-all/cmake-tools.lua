@@ -147,3 +147,18 @@ require("cmake-tools").setup {
   cmake_virtual_text_support = true, -- Show the target related to current file using virtual text (at right corner)
   cmake_use_scratch_buffer = false, -- A buffer that shows what cmake-tools has done
 }
+
+vim.api.nvim_create_user_command('CMakeRunValgrind', function()
+  local cmake = require("cmake-tools")
+  cmake.run({ wrap_call = { "valgrind", "--leak-check=full" } })
+end, { desc = 'Run target with Valgrind' })
+
+vim.api.nvim_create_user_command('CMakeSudoInstall', function()
+  local cmake = require("cmake-tools")
+  vim.cmd(":ShowkeysToggle")
+  local pwd = vim.fn.inputsecret("Password: ")
+  vim.cmd(":ShowkeysToggle")
+  if pwd ~= "" then
+    cmake.install({ wrap_call = { "echo", pwd, "|", "sudo", "-S" }, stdin = pwd })
+  end
+end, { desc = 'Sudo install the target' })

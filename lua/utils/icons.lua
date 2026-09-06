@@ -127,5 +127,14 @@ Icons = {
   save = {
     icon = '',
   },
+  dap = {
+    icon = '',
+  },
+  debug = {
+    icon = '',
+  },
+  debugContinue = {
+    icon = '',
+  },
 }
 return Icons
