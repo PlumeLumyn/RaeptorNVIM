@@ -25,6 +25,7 @@ return {
       words = { enabled = true },
       zen = { enabled = true },
       window = { enabled = true },
+      terminal = { enabled = true },
     },
   },
   FS.globRequire("plugins.lazy.snacks"),

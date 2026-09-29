@@ -1,4 +1,5 @@
 local Plugins = require("utils.plugins")
+local Icons = require('utils.icons')
 
 local MIDDLE_MIN_WIDTH = 120
 local colors = {
@@ -25,6 +26,10 @@ local colors = {
   yellow     = '#e0af68',
   green      = '#9ece6a',
 }
+
+local ok, cmake = pcall(require, "cmake-tools")
+local dap = require('dap')
+
 
 local middle_cache = { value = "", last = 0 }
 local function lualine_middle()
@@ -213,7 +218,32 @@ Plugins.configureSettings('lualine', {
         lualine_cmake,
         color = { fg = colors.black, bg = colors.blue_3, gui = 'bold' },
         separator = { left = '', right = '' },
+        cond = cmake.is_cmake_project,
         padding = { left = 1, right = 1 },
+      },
+      {
+        function()
+          if dap.session() then
+            return Icons.debugContinue.icon
+          else
+            return Icons.debug.icon
+          end
+        end,
+        color = { fg = colors.black, bg = colors.blue_3, gui = 'bold' },
+        separator = { left = '', right = '' },
+        padding = { left = 1, right = 1 },
+        cond = cmake.is_cmake_project,
+        on_click = function(n, mouse)
+          if (n == 1) then
+            if (mouse == "l") then
+              if dap.session() then
+                dap.continue()
+              else
+                vim.cmd("CMakeDebug")
+              end
+            end
+          end
+        end
       },
       {
         'progress',

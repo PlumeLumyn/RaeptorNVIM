@@ -29,3 +29,14 @@ vim.api.nvim_create_autocmd({ 'CursorMoved', 'DiagnosticChanged' }, {
     end
   end
 })
+
+vim.api.nvim_create_autocmd("TermClose", {
+  pattern = "*",
+  callback = function(args)
+    if vim.v.event.status ~= 0 then
+      vim.schedule(function()
+        pcall(vim.api.nvim_buf_delete, args.buf, { force = true })
+      end)
+    end
+  end,
+})

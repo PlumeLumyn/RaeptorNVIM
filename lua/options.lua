@@ -17,16 +17,30 @@ vim.o.cursorline = true
 vim.o.title = true
 local function update_title()
   vim.schedule(function()
+    local pwd = vim.fn.getcwd()
     local name = vim.api.nvim_buf_get_name(0)
 
+    pwd = vim.fn.fnamemodify(pwd, ":t")
+    name = vim.fn.fnamemodify(name, ":t")
+
+    -- Check if start with neo-tree filesystem
+    if vim.startswith(name, "neo-tree filesystem") then
+      name = "Neo-tree"
+    end
+
+    if name == "zsh" then
+      name = "Terminal"
+    end
+
     vim.o.titlestring = "  "
+    vim.o.titlestring = vim.o.titlestring .. pwd .. " - "
 
     if name == "" then
       vim.o.titlestring = vim.o.titlestring .. "RæptorNVIM"
       return
     end
 
-    vim.o.titlestring = vim.o.titlestring .. vim.fn.fnamemodify(name, ":t")
+    vim.o.titlestring = vim.o.titlestring .. name
   end)
 end
 

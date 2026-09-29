@@ -133,6 +133,9 @@ vim.schedule(function()
     { 'V', mode = 'xn',                      desc = 'Visual Line',           icon = Icons.select },
 
     { 'G', mode = 'oxn',                     hidden = true },
+
+    { 'p', '"_dP',                           mode = 'x',                     desc = 'Paste',             icon = Icons.paste },
+    { 'P', '"_dP',                           mode = 'x',                     desc = 'Paste before',      icon = Icons.paste },
   })
 
   if AZERTY then
@@ -152,48 +155,84 @@ vim.schedule(function()
   require('keymaps.g')
   require('keymaps.z')
 
+  local function ToggleTerm(count, opts)
+    opts = vim.tbl_deep_extend("force", {
+      count = count,
+    }, opts or {})
+
+    Snacks.terminal.toggle(nil, opts)
+  end
+
+  local function CreateFloatTerm()
+    ToggleTerm(1, {
+      win = {
+        style = "float",
+      },
+    })
+  end
+
+  local function CreateBottomTerm()
+    ToggleTerm(2, {
+      win = {
+        position = "bottom",
+        height = 20,
+      },
+    })
+  end
+
+  local function CreateRightTerm()
+    ToggleTerm(3, {
+      win = {
+        position = "right",
+        width = 60,
+      },
+    })
+  end
+
   wk.add({
 
-    { "<C-h>",         "<C-w>h",                                       desc = "Move to left window",        icon = Icons.windowLeft },
-    { "<C-j>",         "<C-w>j",                                       desc = "Move to lower window",       icon = Icons.windowDown },
-    { "<C-k>",         "<C-w>k",                                       desc = "Move to upper window",       icon = Icons.windowUp },
-    { "<C-l>",         "<C-w>l",                                       desc = "Move to right window",       icon = Icons.windowRight },
+    { "<C-h>",      "<C-w>h",                                     desc = "Move to left window",        icon = Icons.windowLeft },
+    { "<C-j>",      "<C-w>j",                                     desc = "Move to lower window",       icon = Icons.windowDown },
+    { "<C-k>",      "<C-w>k",                                     desc = "Move to upper window",       icon = Icons.windowUp },
+    { "<C-l>",      "<C-w>l",                                     desc = "Move to right window",       icon = Icons.windowRight },
 
     -- Terminal
-    { "<leader>c",     group = "Terminal",                             icon = Icons.terminal },
-    { "<leader>cc",    ":ToggleTerm direction=horizontal size=20<CR>", desc = "Toggle terminal",            icon = Icons.terminal },
-    { "<leader>cf",    ":ToggleTerm direction=float<CR>",              desc = "Toggle floating terminal",   icon = Icons.terminal },
-    { "<leader>ch",    ":ToggleTerm direction=horizontal size=20<CR>", desc = "Toggle horizontal terminal", icon = Icons.terminal },
-    { "<leader>cv",    ":ToggleTerm direction=vertical size=60<CR>",   desc = "Toggle vertical terminal",   icon = Icons.terminal },
+    { "<leader>c",  group = "Terminal",                           icon = Icons.terminal },
+    { "<leader>cc", CreateBottomTerm,                             desc = "Toggle terminal",            icon = Icons.terminal, },
+    { "<leader>cf", CreateFloatTerm,                              desc = "Toggle floating terminal",   icon = Icons.terminal, },
+    { "<leader>ch", CreateBottomTerm,                             desc = "Toggle horizontal terminal", icon = Icons.terminal, },
+    { "<leader>cv", CreateRightTerm,                              desc = "Toggle vertical terminal",   icon = Icons.terminal, },
 
     -- Terminal mode: window navigation
-    { "<C-h>",         [[<C-\><C-n><C-w>h]],                           desc = "Move to left window",        mode = "t",              icon = Icons.windowLeft },
-    { "<C-j>",         [[<C-\><C-n><C-w>j]],                           desc = "Move to lower window",       mode = "t",              icon = Icons.windowDown },
-    { "<C-k>",         [[<C-\><C-n><C-w>k]],                           desc = "Move to upper window",       mode = "t",              icon = Icons.windowUp },
-    { "<C-l>",         [[<C-\><C-n><C-w>l]],                           desc = "Move to right window",       mode = "t",              icon = Icons.windowRight },
+    { "<C-h>",      [[<C-\><C-n><C-w>h]],                         desc = "Move to left window",        mode = "t",              icon = Icons.windowLeft },
+    { "<C-j>",      [[<C-\><C-n><C-w>j]],                         desc = "Move to lower window",       mode = "t",              icon = Icons.windowDown },
+    { "<C-k>",      [[<C-\><C-n><C-w>k]],                         desc = "Move to upper window",       mode = "t",              icon = Icons.windowUp },
+    { "<C-l>",      [[<C-\><C-n><C-w>l]],                         desc = "Move to right window",       mode = "t",              icon = Icons.windowRight },
 
     -- Terminal mode: exit
-    { "<C-Esc>",       [[<C-\><C-n>]],                                 desc = "Exit terminal mode",         mode = "t" },
-    { "<Esc><leader>", [[<C-\><C-n>]],                                 desc = "Exit terminal mode",         mode = "t" },
+    { "<C-Esc>",    function() vim.cmd("stopinsert") end,         desc = "Exit terminal mode",         mode = "t" },
+    { "<Esc><Esc>", function() vim.cmd("stopinsert") end,         desc = "Exit terminal mode",         mode = "t" },
 
     -- Buffers
-    { "<leader>b",     group = "Buffers",                              icon = Icons.buffer },
-    { "<leader>bd",    ":lua Snacks.bufdelete()<CR>",                  desc = "Close buffer",               icon = Icons.removeFile },
-    { "<leader>bo",    ":lua Snacks.bufdelete.other()<CR>",            desc = "Close others buffers",       icon = Icons.removeFile },
-    { "<leader>ba",    ":lua Snacks.bufdelete.all()<CR>",              desc = "Close all buffers",          icon = Icons.removeFile },
-    { "<leader>bn",    ":enew<CR>",                                    desc = "New buffer",                 icon = Icons.newFile },
+    { "<leader>b",  group = "Buffers",                            icon = Icons.buffer },
+    { "<leader>bd", ":lua Snacks.bufdelete()<CR>",                desc = "Close buffer",               icon = Icons.removeFile },
+    { "<leader>bo", ":lua Snacks.bufdelete.other()<CR>",          desc = "Close others buffers",       icon = Icons.removeFile },
+    { "<leader>ba", ":lua Snacks.bufdelete.all()<CR>",            desc = "Close all buffers",          icon = Icons.removeFile },
+    { "<leader>bn", ":enew<CR>",                                  desc = "New buffer",                 icon = Icons.newFile },
 
     -- Files
-    { "<leader>f",     group = "Files",                                icon = Icons.file },
-    { "<leader>ff",    Snacks.picker.files,                            desc = "Search files" },
-    { "<leader>fb",    Snacks.picker.buffers,                          desc = "Search opened files" },
-    { "<leader>fp",    FindPluginFiles,                                desc = "Search plugin files" },
+    { "<leader>f",  group = "Files",                              icon = Icons.file },
+    { "<leader>ff", Snacks.picker.files,                          desc = "Search files" },
+    { "<leader>fb", Snacks.picker.buffers,                        desc = "Search opened files" },
+    { "<leader>fp", FindPluginFiles,                              desc = "Search plugin files" },
 
 
     -- NvChad
-    { "<leader>n",     group = "NvChad",                               icon = Icons.vim },
-    { "<leader>nt",    ":lua require(\"nvchad.themes\").open()<CR>",   desc = "NvChad theme" },
+    { "<leader>n",  group = "NvChad",                             icon = Icons.vim },
+    { "<leader>nt", ":lua require(\"nvchad.themes\").open()<CR>", desc = "NvChad theme" },
 
+    -- DAP
+    { "<leader>d",  group = "DAP",                                icon = Icons.dap },
   })
 
   -- BarBar
@@ -308,6 +347,39 @@ vim.schedule(function()
       callback = function()
         wk.add({ "<localleader>m", "<cmd>Checkbox toggle<cr>", desc = "Toggle checkbox", buffer = true })
       end
+    })
+  end
+
+  -- Breakpoints
+  if (Plugins.isPluginInstalled('dap')) then
+    local dap = require('dap')
+    local breakpoint_condition = function()
+      dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+    end
+    local continue = function()
+      local ok, cmake = pcall(require, "cmake-tools")
+      if ok and cmake.is_cmake_project() and not dap.session() then
+        vim.cmd("CMakeDebug")
+      else
+        dap.continue()
+      end
+    end
+    wk.add({
+      -- Continue / start
+      { "<F5>",       continue,              desc = "DAP: Continue" },
+
+      -- Stepping
+      { "<F10>",      dap.step_over,         desc = "DAP: Step over" },
+      { "<F11>",      dap.step_into,         desc = "DAP: Step into" },
+      { "<F12>",      dap.step_out,          desc = "DAP: Step out" },
+
+      -- Stop / restart
+      { "<leader>dq", dap.terminate,         desc = "Terminate" },
+      { "<leader>dr", dap.restart,           desc = "Restart" },
+
+      { "<leader>dc", dap.clear_breakpoints, desc = "Clear breakpoints" },
+      { "<leader>db", dap.toggle_breakpoint, desc = "Breakpoint" },
+      { "<leader>dB", breakpoint_condition,  desc = "Conditional breakpoint" },
     })
   end
 
