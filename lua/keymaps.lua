@@ -311,7 +311,7 @@ vim.schedule(function()
     })
   end
 
-Snacks.toggle.profiler():map("<leader>pp")
+  Snacks.toggle.profiler():map("<leader>np")
   -- Classic
   wk.add({
     { "<leader>x", NVIM.closeWindow,       desc = "Close window",     icon = Icons.close },

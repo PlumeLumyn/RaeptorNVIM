@@ -1,5 +1,6 @@
 local Plugins = require("utils.plugins")
 
+local MIDDLE_MIN_WIDTH = 120
 local colors = {
   blue       = '#80a0ff',
   blue_2     = '#99b3ff',
@@ -14,6 +15,7 @@ local colors = {
   red        = '#ff5189',
 
   violet     = '#d183e8',
+  violet_1   = '#dc99ec',
   violet_2   = '#dab0ee',
   violet_3   = '#e3c1f3',
   violet_4   = '#ecd3f8',
@@ -108,6 +110,14 @@ local function lualine_cmake()
   return res
 end
 
+local function lualine_record()
+  local reg = vim.fn.reg_recording()
+  if reg == "" then
+    return ""
+  end
+  return reg
+end
+
 local bubbles_theme = {
   normal = {
     a = { fg = colors.black, bg = colors.violet },
@@ -150,6 +160,16 @@ Plugins.configureSettings('lualine', {
     lualine_a = { { 'mode', separator = { left = '' }, right_padding = 2 } },
     lualine_b = {
       {
+        lualine_record,
+        icon = "󰁥",
+        cond = function()
+          return vim.fn.reg_recording() ~= ""
+        end,
+        color = { fg = colors.black, bg = colors.violet_1, gui = "bold" },
+        separator = { left = '', right = '' },
+        padding = { left = 1, right = 1 },
+      },
+      {
         lualine_time,
         icon = "",
         color = { fg = colors.black, bg = colors.violet_2, gui = "bold" },
@@ -173,6 +193,9 @@ Plugins.configureSettings('lualine', {
       '%=', --[[ add your center components here in place of this comment ]]
       {
         lualine_middle,
+        cond = function()
+          return vim.o.columns >= MIDDLE_MIN_WIDTH
+        end,
         color = { fg = colors.black, bg = colors.white, gui = "bold" },
         separator = { left = "", right = "" },
         padding = { left = 1, right = 1 },
