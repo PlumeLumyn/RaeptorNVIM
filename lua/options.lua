@@ -67,11 +67,4 @@ vim.opt.foldenable = true
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 
-vim.diagnostic.config({
-  virtual_text = true,
-  virtual_lines = { current_line = true },
-  underline = true,
-  update_in_insert = false
-})
-
 vim.cmd(":ShowkeysToggle")

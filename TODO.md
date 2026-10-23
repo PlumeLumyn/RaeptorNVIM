@@ -16,22 +16,22 @@
 
 ## Plugins :
 ### LSP :
-- https://github.com/romus204/referencer.nvim
-- https://github.com/kosayoda/nvim-lightbulb
-- https://github.com/onsails/lspkind.nvim
-- https://github.com/ray-x/lsp_signature.nvim
-- https://github.com/smjonas/inc-rename.nvim
-- https://github.com/jubnzv/virtual-types.nvim
-- https://github.com/retran/meow.yarn.nvim
-- https://github.com/hasansujon786/nvim-navbuddy
-- https://github.com/aznhe21/actions-preview.nvim
+- [x] https://github.com/romus204/referencer.nvim
+- [ ] https://github.com/kosayoda/nvim-lightbulb
+- [ ] https://github.com/onsails/lspkind.nvim
+- [x] https://github.com/ray-x/lsp_signature.nvim
+- [ ] https://github.com/smjonas/inc-rename.nvim
+- [/] https://github.com/jubnzv/virtual-types.nvim
+- [/] https://github.com/retran/meow.yarn.nvim
+- [/] https://github.com/hasansujon786/nvim-navbuddy
+- [/] https://github.com/aznhe21/actions-preview.nvim
 - https://github.com/rachartier/tiny-code-action.nvim
 - https://github.com/j-hui/fidget.nvim
-- https://sr.ht/~chinmay/clangd_extensions.nvim/
+- [x] https://sr.ht/~chinmay/clangd_extensions.nvim/
 - https://github.com/error311/wayfinder.nvim
 - https://github.com/jinzhongjia/LspUI.nvim
 - https://github.com/Wansmer/symbol-usage.nvim
-- https://github.com/rachartier/tiny-inline-diagnostic.nvim
+- [x] https://github.com/rachartier/tiny-inline-diagnostic.nvim
 
 ### Completion :
 - https://github.com/Kaiser-Yang/blink-cmp-git
